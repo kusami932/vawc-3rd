@@ -1,9 +1,9 @@
-# Data notes (intermediate checkpoint 3)
+# Data notes (data unchanged since intermediate-3; geography section updated in pass 5)
 
 ## Disclosure
 Every organization, program, and vacancy is a **fictional demonstration record**. Employer names start with "Example"; providers and programs are described as samples. Nothing here is a verified or current real-world offering, and no contact details are included. The application's About dialog and footer say so.
 
-## Actual counts (checked by `tests/smoke-test.js`)
+## Actual counts (checked by `tests/smoke-test.js` (and by `tests/browser-test.mjs` through the interface))
 | Item | Baseline (intermediate-2) | Now | Target |
 |---|---:|---:|---:|
 | Occupations | 6 | 40 | ≥ 40 |
@@ -42,8 +42,14 @@ For the test suite's independent acceptance predicate (administrative-type occup
 - Best match: +3 if the whole query is in the title; per query word +4 title, +2 occupation title, +2 exact keyword, +1 employer. Ties: most recent, title A–Z, ID. A blank query scores 0 for everyone, so it falls back to most recent. Nothing is boosted by identity.
 - Most recent: postedDays ascending (same tie-breaks). Highest listed pay: upper end as hourly equivalent, descending, unknown last.
 
-## Geographic assumptions and approximations
-City distances are straight-line (haversine, radius 3,958.8 mi) between **approximate city-center coordinates**, not addresses or travel distance, and a straight-line radius is not a drive time. Hand-estimated distances from Richmond used to write test expectations: Mechanicsville 6, Henrico 7, Chesterfield 12, Hopewell 18, Colonial Heights 21, Petersburg 22 (all within 25); Williamsburg 46, Fredericksburg 53, Newport News 61, Charlottesville 66, Norfolk 79, Roanoke 141. Only the 13 listed locations (and the ZIP codes listed as aliases) are supported; other input shows the existing validation message. ZIP aliases are limited and were not checked against an authoritative source. HE-07 (explaining what each location control affects) is not part of this pass.
+## Geographic assumptions and approximations (what each location means)
+City distances are straight-line (haversine, radius 3,958.8 mi) between **approximate city-center coordinates**, not addresses or travel distance, and a straight-line radius is not a drive time. The application never calls this commuting distance. Meanings used throughout the interface:
+- **Job location** (jobs search): the center of the job search, matched against each job's city; the radius (exact city, 5, 10, 25, 50, 75 or 100 miles, default 25) applies only when a location is entered. Blank, "Virginia", "VA" or "All Virginia" means all Virginia.
+- **Provider location** (providers search and cards): where the organization is based; exact city match, no radius.
+- **Training location** (programs search and cards): where the program is delivered (`program.city`); exact city match. It can differ from the provider's location (P08: Richmond provider, delivered in Henrico; P28: Norfolk provider, online); both are displayed and the difference is flagged.
+- **Occupation area** (Explore occupations): used only to set the job-search center (related jobs) or the training delivery city (related programs). Occupation text is general: the data holds no regional wages, demand figures or licensing rules, and none are shown.
+- Supported locations: 13 cities plus a few ZIP codes each (listed in the "See supported locations" dialog); other places are refused with an explanation rather than ignored.
+Hand-estimated distances (miles) used to write test expectations: from Richmond — Mechanicsville 6, Henrico 7, Chesterfield 12, Hopewell 18, Colonial Heights 21, Petersburg 22; from Chesterfield — Richmond 11.9, Henrico 15.8, Mechanicsville 17.6, Charlottesville 69.6, Norfolk 76.4.
 
 ## Reference-date handling
 `meta.referenceDate` is 2026-11-20. `postedDays` values are fixed numbers measured from that date and displayed as days ago; the application never reads the clock, so "Last 24 hours / 7 days / 30 days" filters keep working as the calendar advances. The trade-off: the displayed ages do not change over time. The About dialog states the reference date.

@@ -1,9 +1,12 @@
-# Continuation checkpoint (INTERMEDIATE package — not the final P4 deliverable)
-Done in this pass: data expansion to all six targets with checks; real-data verification of search, filters, sorting, and occupation→training links. Next planned phase: **HE-02**.
-## Next concrete step: HE-02 (edit search on the results screen)
-1. In `app.js`, find the job search form markup inside `jobs()` and extract it into `jobForm(c)` (same field names as `defaults.jobs`, same disclosures). Render it unchanged in `jobs()`.
-2. In `results()`, render `jobForm(S.jobs)` in a collapsible panel above the list (keyword, location, radius always visible; the three disclosure groups for the remaining filters), using the single `S.jobs` draft so home, detailed search, and results cannot drift. Make element IDs unique per placement.
-3. Keep the existing submit path (`kind="jobs"`): validate, then copy draft → `S.jobApplied`, update count, summary, and list together; invalid input must leave `S.jobApplied` untouched. Document Reset in one place.
-4. Keep the pending-change message and the retained selection logic (C-03). Add stubbed-DOM tests (a FormData stub) for draft-versus-applied, invalid input, unchanged vs changed resubmission.
-## Remaining after HE-02
-HE-07 location help text; HE-09 shared field renderer + application-method row; HE-04/05/06/08 remainder; original-site restoration (alphabetic directory, provider filters where data supports them, menu entries for peripheral services); real-browser verification of VALIDATION.md §4.
+# CHECKPOINT — after pass 5 (HE-02 … HE-09 implemented and browser-checked)
+
+HE-02, 04, 05, 06, 07, 08 and 09 are implemented and checked (VALIDATION.md). The overall P4 deliverable is **not** final.
+
+## Outstanding (exact list)
+1. **Original-site restoration** — the explicit list is in ORIGINAL-SITE-MAPPING.md ("Outstanding original-site options"). Only a notice and return path exist for those entries.
+2. **Checks not yet run** (VALIDATION.md section 6): other browsers (Firefox, Safari), real phones/tablets, screen readers, browser zoom at 200–400%, Windows forced-colors, GitHub Pages deployment of a copy.
+3. **Known limitations**: radius and training location are approximations (straight-line between city centers; exact-city match for training); application destinations are simulated and no employer URLs exist; job duties for the 70 generated jobs are inherited from the occupation; displayed posting ages are fixed to the 2026-11-20 reference date; Back/Forward restores context from saved state, not from a history stack.
+4. **Evidence of improvement**: none claimed or measured; this needs the usability study.
+
+## Next concrete step
+Run the manual checklist in `evaluator/index.html` and VALIDATION.md section 6 on a deployed copy (new repository or branch), then decide which outstanding original-site options (item 1) to restore.
